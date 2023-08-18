@@ -1,15 +1,13 @@
 package org.itstep;
 
 import org.itstep.entities.User;
+import org.itstep.myClassWork.August18Academy;
 
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("Hello world!");
-
-        User u = new User();
-        u.setEmail("keeper@ninydev.com");
-        u.setPassword("QweAsdZxc!23");
+        August18Academy work = new August18Academy();
+        work.run();
 
     }
 }
