@@ -1,4 +1,4 @@
-package org.itstep.myClassWork;
+package org.itstep.myClassWork.august18;
 
 import org.itstep.entities.academy.Group;
 import org.itstep.entities.academy.Student;
