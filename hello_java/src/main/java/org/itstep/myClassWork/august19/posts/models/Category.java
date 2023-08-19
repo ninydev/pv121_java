@@ -14,4 +14,9 @@ public class Category {
     private String slug;
 
     ArrayList<Post> posts = new ArrayList<>();
+
+    @Override
+    public String toString(){
+        return "\n\t Category: {title=" + this.title + " }";
+    }
 }

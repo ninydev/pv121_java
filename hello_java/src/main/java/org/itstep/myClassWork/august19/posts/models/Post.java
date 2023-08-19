@@ -15,4 +15,9 @@ public class Post {
 
     Category category;
     ArrayList<Tag> tags = new ArrayList<>();
+
+    @Override
+    public String toString(){
+        return "\n\t Post: {title=" + this.title + " }";
+    }
 }

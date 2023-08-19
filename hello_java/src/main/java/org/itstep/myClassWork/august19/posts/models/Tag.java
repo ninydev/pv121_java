@@ -14,4 +14,9 @@ public class Tag {
     private String slug;
 
     ArrayList<Post> posts = new ArrayList<>();
+    @Override
+    public String toString(){
+        return "\n\t Tags: {title=" + this.title + " }";
+    }
+
 }
