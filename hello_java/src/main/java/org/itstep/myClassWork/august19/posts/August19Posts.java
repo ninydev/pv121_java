@@ -6,6 +6,8 @@ import org.itstep.myClassWork.august19.posts.models.Tag;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class August19Posts implements Runnable
 {
@@ -93,42 +95,78 @@ public class August19Posts implements Runnable
             System.out.println(p);
         }
 
-        System.out.println("\n\n-------------------------------\n Удалим один из постов");
-        // мало того, что мне нужно удалить пост из коллекции постов
-        posts.remove(p1);
-        // его еще нужно удалить и из коллекции постов в его категории
-        p1.getCategory().getPosts().remove(p1);
-        // и из коллекций во всех метках, где этот пост зафиксирован
-        for (Tag t: p1.getTags()) {
-            t.getPosts().remove(p1);
+        // ------------------------------------------------------------------------------------------
+        String findTag = tOdesa.getTitle();
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("Ищу посты, где метка равна " + findTag);
+        for (Post p: posts) {
+            for (Tag t: p.getTags()) {
+                if(t.getTitle() == findTag) {
+                    System.out.println(p);
+                }
+            }
         }
 
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("Ищу посты, где title соджержит новость ");
+        posts.stream().filter(post -> post.getTitle().contains("новость")).forEach(post -> {
+            System.out.println(post);
+            // post.setTitle("Test"); // ПОТОК не хранит элементы - изменение здесь поменяет сам этемент
+        });
 
-        System.out.println("All Posts: " );
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("Ищу посты, где метка равна " + findTag);
+        posts.stream()
+                .filter(post -> post.getTags().stream()
+                        .anyMatch(tag -> tag.getTitle().contains(findTag)))
+                .sorted() // Не изменит порядок сортировки в источнике данных - а только для результирующего потока
+                .forEach(post -> {
+                    System.out.println(post);
+                });
 
-        System.out.println(posts);
+//        List<Post> postsWithTag = posts.stream()
+//                .filter(post -> post.getTags().stream().anyMatch(tag -> tag.getTitle().equals("нужный_тайтл")))
+//                .collect(Collectors.toList());
+//
+//        postsWithTag.forEach(System.out::println);
 
-        // Получить посты по категориям
 
-        System.out.println("Category: " + cNews.getTitle());
-        for (Post p:cNews.getPosts()) {
-            System.out.println(p);
-        }
-
-        System.out.println("Category: " + cPromo.getTitle());
-        for (Post p:cPromo.getPosts()) {
-            System.out.println(p);
-        }
-
-        // Получить посты по тегам
-        System.out.println("Tag: " + tOdesa.getTitle());
-        for (Post p:tOdesa.getPosts()) {
-            System.out.println(p);
-        }
-
-        System.out.println("Tag: " + tMykolaiv.getTitle());
-        for (Post p:tMykolaiv.getPosts()) {
-            System.out.println(p);
-        }
+//        System.out.println("\n\n-------------------------------\n Удалим один из постов");
+//        // мало того, что мне нужно удалить пост из коллекции постов
+//        posts.remove(p1);
+//        // его еще нужно удалить и из коллекции постов в его категории
+//        p1.getCategory().getPosts().remove(p1);
+//        // и из коллекций во всех метках, где этот пост зафиксирован
+//        for (Tag t: p1.getTags()) {
+//            t.getPosts().remove(p1);
+//        }
+//
+//
+//        System.out.println("All Posts: " );
+//
+//        System.out.println(posts);
+//
+//        // Получить посты по категориям
+//
+//        System.out.println("Category: " + cNews.getTitle());
+//        for (Post p:cNews.getPosts()) {
+//            System.out.println(p);
+//        }
+//
+//        System.out.println("Category: " + cPromo.getTitle());
+//        for (Post p:cPromo.getPosts()) {
+//            System.out.println(p);
+//        }
+//
+//        // Получить посты по тегам
+//        System.out.println("Tag: " + tOdesa.getTitle());
+//        for (Post p:tOdesa.getPosts()) {
+//            System.out.println(p);
+//        }
+//
+//        System.out.println("Tag: " + tMykolaiv.getTitle());
+//        for (Post p:tMykolaiv.getPosts()) {
+//            System.out.println(p);
+//        }
     }
 }
