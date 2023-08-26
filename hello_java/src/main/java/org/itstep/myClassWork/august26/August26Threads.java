@@ -1,16 +1,97 @@
 package org.itstep.myClassWork.august26;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.Random;
+import java.util.concurrent.*;
 
 public class August26Threads implements Runnable {
     @Override
     public void run() {
         System.out.println(" Threads work");
-        startAsCallable();
+        calcPi();
         // anonim();
+    }
+
+    private void calcPiSemaphore(){
+        Semaphore s = new Semaphore(1);
+        CalculatePiElementSemaphore el1 = new CalculatePiElementSemaphore(0, 100, s);
+        CalculatePiElementSemaphore el2 = new CalculatePiElementSemaphore(101, 200, s);
+
+        Thread t1 = new Thread(el1);
+        t1.start();
+        Thread t2 = new Thread(el2);
+        t2.start();
+
+        try {
+            // join позволяет главному потоку main дождаться завершения потоков
+            t1.join();
+            t2.join();
+            // Мы просто ждем - поток будет заблокирован
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    private void calcPi() {
+        CalculatePiElement el1 = new CalculatePiElement(0, 100);
+        CalculatePiElement el2 = new CalculatePiElement(101, 200);
+
+        ExecutorService executor = Executors.newFixedThreadPool(1); // Создаем пул из двух потоков
+
+        Future<?> future1 = executor.submit(el1);
+        Future<?> future2 = executor.submit(el2);
+
+        executor.shutdown();
+
+        // Проверяем, завершились ли обе задачи
+        do {
+//            if((new Random()).nextInt(100)> 95) {
+//                future1.cancel(true);
+//            }
+//            // System.out.print(".");
+//            if (future1.isDone()) {
+//                System.out.println(" 1 isDone. Status: " + future1.state());
+//            }
+//            if (future2.isDone()) {
+//                System.out.println(" 2 isDone. Status: " + future2.state());
+//            }
+            // Таким образом я не блокирую поток main - и могу управлять всеми порожденными потоками
+            // прерывать их - ставить на паузу и тд и тп
+            System.out.print(".");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (!future1.isDone() || !future2.isDone());
+
+        // Дожидаемся завершения всех потоков в пуле - это аналог join но сразу для всех в пуле потоков
+//        try {
+//            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        /*
+
+        Thread t1 = new Thread(el1);
+        t1.start();
+        Thread t2 = new Thread(el2);
+        t2.start();
+
+        try {
+            // join позволяет главному потоку main дождаться завершения потоков
+            t1.join();
+            t2.join();
+            // Мы просто ждем - поток будет заблокирован
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+         */
+
+
     }
 
     private void startAsCallable() {
