@@ -1,8 +1,6 @@
 package org.itstep;
 
-import org.itstep.myClassWork.august19.August19Streams;
-import org.itstep.myClassWork.august19.posts.August19Posts;
-import org.itstep.myClassWork.august25.August25Threads;
+import org.itstep.myClassWork.august26.August26Threads;
 
 public class Main {
 
@@ -10,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        August25Threads work = new August25Threads();
+        August26Threads work = new August26Threads();
         work.run();
 
         Thread t = Thread.currentThread();
