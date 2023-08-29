@@ -1,5 +1,7 @@
 package org.itstep.myClassWork.august29;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -7,8 +9,40 @@ public class August29Files implements Runnable
 {
     @Override
     public void run() {
-        saveObj();
-        loadObj();
+        saveObjToJson();
+        loadObjFromJson();
+    }
+
+    private void saveObjToJson() {
+        Person person = new Person("Sam", 33);
+
+        // 1. Экземпляр класса, который будет формировать из моего объекта JSON строку
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // 2. Открываю файл на запись
+        try (FileWriter fileWriter = new FileWriter("person.json")) {
+            // 3. Записываю результат трансформации (объекта в json) в файл
+            objectMapper.writeValue(fileWriter, person);
+        } catch (IOException e) {
+            e.getMessage();
+        }
+    }
+
+    private void loadObjFromJson() {
+        // 1. Экземпляр класса, который будет формировать из JSON строки объект
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // 2. Открыть файл с данными на чтение
+        try (FileReader fileReader = new FileReader("person.json")) {
+            // 3. Считать стоку и сформировать на ее основе объект
+            // Мне нужно описать @JsonCreator - правила по которому будет формироваться объект
+            // из полей JSON строки
+            Person person = objectMapper.readValue(fileReader, Person.class);
+
+            System.out.printf("Name: %s \t Age: %d \n", person.getName(), person.getAge());
+        } catch (IOException e) {
+            e.getMessage();
+        }
     }
 
     private void saveObj () {
