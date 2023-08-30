@@ -32,10 +32,14 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
+  # Для удобства я разверну систему просмотра базы данных PhpMyAdmin в отдельном контейнере
   pma:
+    # https://hub.docker.com/_/phpmyadmin
     image: phpmyadmin
+    # Порт, по которому я буду ходить что бы просматривать базу данных
     ports:
       - "30122:80"
+    # Параметры -  к какой базе мне подключаться
     environment:
       PMA_HOST: java.db.mysql
       PMA_PORT: 3306
