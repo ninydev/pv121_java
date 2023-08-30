@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 
@@ -19,6 +17,49 @@ public class August30MySql implements Runnable
     @Override
     public void run() {
         ConnectToDbByProps();
+        migrate(); // Создаем необходимые для работы таблицы
+        seed();
+    }
+
+    private void seed(){
+        String sqlCreateAdmin = "INSERT INTO `users` " +
+                "(`id`, `email`, `password`, `created_at`) " +
+                "VALUES " +
+                "(NULL, 'admin@admin.com', MD5('QweAsdZxc!23'), CURRENT_TIMESTAMP)";
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sqlCreateAdmin);
+        }
+        // Анализируем повторение сущности ( за счет уникальности поля email)
+        catch (SQLIntegrityConstraintViolationException e) {
+            // Если такая сущность уже в базе есть - значит просто продолжаем работу
+            System.out.println(" Admin уже создан в базе");
+        }
+        catch (SQLException e) {
+            // Если что то другое пошло не так - то выходим из приложения по RuntimeException
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void migrate() {
+        String sqlCrateTable = "" +
+                "CREATE TABLE IF NOT EXISTS `pv121`.`users` " +
+                "(" +
+                "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT , " +
+                "`email` VARCHAR(64) NOT NULL , " +
+                "`password` VARCHAR(255) NOT NULL , " +
+                "`created_at` DATETIME on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP , " +
+                "PRIMARY KEY (`id`), UNIQUE (`email`)) ENGINE = InnoDB;";
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sqlCrateTable);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+
     }
 
 
