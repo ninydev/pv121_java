@@ -21,6 +21,10 @@ public class August30MySql implements Runnable
         ConnectToDbByProps();
     }
 
+
+    /**
+     * В этом случае мы храним настройки подключения в файле database.properties
+     */
     private void ConnectToDbByProps() {
         Properties props = new Properties();
         try(InputStream in = Files.newInputStream(Paths.get("database.properties"))){
@@ -28,12 +32,12 @@ public class August30MySql implements Runnable
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String url = props.getProperty("url");
-        String username = props.getProperty("username");
-        String password = props.getProperty("password");
+        String jdbcUrl = "jdbc:mysql://localhost:30121/" + props.getProperty("MYSQL_DATABASE");
+        String MYSQL_USER = props.getProperty("MYSQL_USER");
+        String MYSQL_PASSWORD = props.getProperty("MYSQL_PASSWORD");
 
         try {
-            this.connection = DriverManager.getConnection(url, username, password);
+            this.connection = DriverManager.getConnection(jdbcUrl, MYSQL_USER, MYSQL_PASSWORD);
             System.out.println("Connected to the database!");
             // connection.close(); // Не забудьте закрыть соединение, когда оно больше не нужно
 
@@ -42,6 +46,9 @@ public class August30MySql implements Runnable
         }
     }
 
+    /**
+     * В данном случае - мы храним настройки подключения в файле .env
+     */
     private void ConnectToDb() {
         // Лучше читать данные с .env
         Dotenv dotenv = Dotenv.load();
