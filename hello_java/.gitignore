@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 
 volumes/
+.env
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
