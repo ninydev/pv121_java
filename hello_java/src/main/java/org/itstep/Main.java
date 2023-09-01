@@ -1,9 +1,7 @@
 package org.itstep;
 
-import org.itstep.myClassWork.august26.August26Threads;
-import org.itstep.myClassWork.august29.August29Files;
-import org.itstep.myClassWork.august30.August30MySql;
-import org.itstep.myClassWork.september01.September01Redis;
+
+import org.itstep.myClassWork.september01.September01Mongo;
 
 public class Main {
 
@@ -11,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        September01Redis work = new September01Redis();
+        September01Mongo work = new September01Mongo();
         work.run();
 
         Thread t = Thread.currentThread();
