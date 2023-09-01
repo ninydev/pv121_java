@@ -2,7 +2,21 @@ version: '3'
 
 services:
 
-  # Имя контейнера
+  redis:
+    image: 'redis'
+    # Я примонтирую папку для файлов редиса
+    volumes:
+      - './volumes/redis:/data'
+    # Я проброшу порт, что бы с главной системы я мог попадать в редис сервер
+    ports:
+      - '6379:6379'
+    networks:
+      - pv121_java
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
+      # Имя контейнера
   java.db.mysql:
     # https://hub.docker.com/_/mysql
     # Я выбираю имидж для создания контейнера на основе предложений с офицального сайта

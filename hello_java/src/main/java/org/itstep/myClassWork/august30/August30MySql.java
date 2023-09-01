@@ -26,6 +26,19 @@ public class August30MySql implements Runnable
                 "(`id`, `email`, `password`, `created_at`) " +
                 "VALUES " +
                 "(NULL, 'admin@admin.com', MD5('QweAsdZxc!23'), CURRENT_TIMESTAMP)";
+
+        // Пример запроса, построенного ORM системой, который приводит к краху прилложения.
+//        sqlCreateAdmin = "" +
+//                "SELECT count(DISTINCT(`Nft`.`id`)) AS `count` FROM `nfts` AS `Nft` " +
+//                "INNER JOIN `nft_collections` AS `NftCollection` ON `Nft`.`collectionId` = `NftCollection`.`id` AND `NftCollection`.`isPublic` = true " +
+//                "INNER JOIN `nft_owners` AS `NftCollection->NftOwner` ON `NftCollection`.`ownerId` = `NftCollection->NftOwner`.`id` " +
+//                "LEFT OUTER JOIN ( `favorite_points` AS `Favorites->FavoritePoint` " +
+//                "INNER JOIN `favorites` AS `Favorites` ON `Favorites`.`id` = `Favorites->FavoritePoint`.`favoriteId`) ON `Nft`.`id` = `Favorites->FavoritePoint`.`nftId` AND `Favorites`.`userId` = '3cb67218-2bf7-4cf6-8810-6907952c86d2' " +
+//                "INNER JOIN `nfts_nft_custom_collections` AS `NftNftCustomCollections` ON `Nft`.`id` = `NftNftCustomCollections`.`nftId` AND `NftNftCustomCollections`.`collectionId` = '52b1e929-28c0-47e1-adf6-a0247abf44dd' " +
+//                "INNER JOIN ( `nfts_nft_custom_collections` AS `NftCustomCollections->NftNftCustomCollection` " +
+//                "INNER JOIN `nft_custom_collections` AS `NftCustomCollections` ON `NftCustomCollections`.`id` = `NftCustomCollections->NftNftCustomCollection`.`collectionId`) ON `Nft`.`id` = `NftCustomCollections->NftNftCustomCollection`.`nftId` AND `NftCustomCollections`.`id` = '52b1e929-28c0-47e1-adf6-a0247abf44dd' " +
+//                "LEFT OUTER JOIN `nft_selects` AS `NftSelects` ON `Nft`.`id` = `NftSelects`.`nftId` AND `NftSelects`.`userId` = '3cb67218-2bf7-4cf6-8810-6907952c86d2' AND `NftSelects`.`customCollectionId` = '52b1e929-28c0-47e1-adf6-a0247abf44dd' " +
+//                "WHERE `Nft`.`isPublic` = true;";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sqlCreateAdmin);
