@@ -41,9 +41,5 @@ public class September01Mongo implements Runnable
 
         // Вставляю в коллекцию документ
         collection.insertOne(newDoc);
-
-//
-//        mongoDatabase.createCollection("MyColl");
-
     }
 }
