@@ -8,14 +8,14 @@ import java.net.Socket;
 public class ChatClientSocket implements Runnable
 {
     private Socket socket;
-    private ObjectOutputStream outputStream;
+    // private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
     public ChatClientSocket(Socket socket) {
         this.socket = socket;
         try {
             // Получу потоки
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            // outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -27,7 +27,7 @@ public class ChatClientSocket implements Runnable
         try {
             while (true) {
                 try {
-                    String msg = (String) inputStream.readObject();
+                    ChatMessage msg = (ChatMessage) inputStream.readObject();
                     System.out.println("Server Say: " + msg);
                 } catch (Exception e) {
                     System.out.println("in ChatClientSocket.run: " +  e.getMessage());

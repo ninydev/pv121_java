@@ -37,11 +37,12 @@ public class ChatServerSocket implements Runnable
         try {
             while (true) {
                 try {
-                    String msg = (String) inputStream.readObject();
+                    ChatMessage msg = (ChatMessage) inputStream.readObject();
+
                     System.out.println(Thread.currentThread().getName() + ": " + msg);
                     sendMessage("U write: " + msg);
                     // Если пришло сообщение на выход - выхожу из цикла
-                    if (msg.equals("exit")) {
+                    if (msg.getData().equals("exit")) {
                         break;
                     }
                 } catch (Exception e) {
@@ -56,10 +57,11 @@ public class ChatServerSocket implements Runnable
 
     /**
      * Отправить сообщение
-     * @param msg
+     * @param data
      */
-    public void sendMessage (String msg) {
+    public void sendMessage (String data) {
         try {
+            ChatMessage msg = new ChatMessage(data);
             outputStream.writeObject(msg);
             outputStream.flush();
         } catch (Exception e) {

@@ -22,8 +22,8 @@ public class ChatClient {
             Socket socket = new Socket("localhost", 33123);
 
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-            String strHello = "Hello";
-            outputStream.writeObject(strHello);
+            ChatMessage msgHello = new ChatMessage("Hello World");
+            outputStream.writeObject(msgHello);
             outputStream.flush();
 
             ChatClientSocket c = new ChatClientSocket(socket);
@@ -37,7 +37,8 @@ public class ChatClient {
                 System.out.print("Введите сообщение: ");
                 String inputString = scanner.nextLine();
 
-                outputStream.writeObject(inputString);
+                ChatMessage msg = new ChatMessage(inputString);
+                outputStream.writeObject(msg);
                 outputStream.flush();
 
                 if (inputString.equals("exit")) {
