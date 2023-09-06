@@ -12,9 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class User implements Serializable
 {
+    private String name;
 
     private UUID user_id; // = UUID.randomUUID();
     private UUID customer_id;
-
-    private String name;
 }

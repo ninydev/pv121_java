@@ -4,6 +4,7 @@ import org.itstep.myClassWork.september06.models.User;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Site {
 
@@ -19,9 +20,37 @@ public class Site {
         int userChoice;
         do {
             userChoice = menu();
+            switch (userChoice){
+                case 1: commandUserRegister();
+                    break;
+                case 9: commandShowAll();
+                    break;
+            }
 
         } while (userChoice != 0);
     }
+
+    private void commandUserRegister(){
+        System.out.print("Введите имя: ");
+        String name = scanner.nextLine();
+        User newUser = new User();
+        newUser.setName(name);
+        newUser.setUser_id(UUID.randomUUID());
+        newUser.setCustomer_id(null);
+
+        users.add(newUser);
+    }
+
+    private void commandShowAll() {
+        System.out.println("\n+------------------------------+\n");
+        for (User u: users) {
+            System.out.println(u);
+        }
+        System.out.println("\n+------------------------------+\n");
+    }
+
+
+
 
     Scanner scanner = new Scanner(System.in);
     public int menu() {
@@ -44,7 +73,7 @@ public class Site {
                 scanner.nextLine(); // Очищаем буфер ввода
             }
         }
-
+        scanner.nextLine();
         return  userChoice;
     }
 }
