@@ -39,7 +39,11 @@ public class serverCRM implements Runnable
                             case userRegister:
                                 Customer newCustomer = crm.createCustomerFromUser((User) request.getBody());
                                 ObjectOutputStream outputStream = new ObjectOutputStream(siteSocket.getOutputStream());
-                                outputStream.writeObject(newCustomer);
+
+                                Response r = new Response();
+                                r.setStatus(ResponseStatus.Ok);
+                                r.setBody(newCustomer);
+                                outputStream.writeObject(r);
                                 siteSocket.close();
 
                                 break;

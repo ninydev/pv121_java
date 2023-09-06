@@ -4,6 +4,7 @@ import org.itstep.myClassWork.september06.models.Customer;
 import org.itstep.myClassWork.september06.models.User;
 import org.itstep.myClassWork.september06.servers.Request;
 import org.itstep.myClassWork.september06.servers.RequestCommands;
+import org.itstep.myClassWork.september06.servers.Response;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,7 +59,8 @@ public class Site {
             outputStream.writeObject(r);
 
             ObjectInputStream inputStream = new ObjectInputStream(connect.getInputStream());
-            Customer newCustomer = (Customer) inputStream.readObject();
+            Response res = (Response) inputStream.readObject();
+            Customer newCustomer = (Customer)res.getBody();
 
             System.out.println(newCustomer);
 
