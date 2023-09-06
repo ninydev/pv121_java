@@ -34,6 +34,15 @@ public class CRM {
     }
 
 
+    public Customer createCustomerFromUser(User user){
+        Customer c = new Customer();
+        c.setUser_id(user.getUser_id());
+        c.setName(user.getName());
+        c.setCustomer_id(UUID.randomUUID());
+        customers.add(c);
+        return c;
+    }
+
     private void commandAddCustomer(){
         System.out.print("Введите имя: ");
         String name = scanner.nextLine();

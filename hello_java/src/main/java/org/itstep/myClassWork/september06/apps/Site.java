@@ -1,7 +1,13 @@
 package org.itstep.myClassWork.september06.apps;
 
+import org.itstep.myClassWork.september06.models.Customer;
 import org.itstep.myClassWork.september06.models.User;
+import org.itstep.myClassWork.september06.servers.Request;
+import org.itstep.myClassWork.september06.servers.RequestCommands;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
@@ -39,7 +45,41 @@ public class Site {
         newUser.setCustomer_id(null);
 
         users.add(newUser);
+        // Событие регистрации наступило
+
+        Request r = new Request(RequestCommands.userRegister, newUser);
+        sendToCRM(r);
     }
+
+    private void sendToCRM(Request r) {
+        try {
+            Socket connect = new Socket("localhost", 33123);
+            ObjectOutputStream outputStream = new ObjectOutputStream(connect.getOutputStream());
+            outputStream.writeObject(r);
+
+            ObjectInputStream inputStream = new ObjectInputStream(connect.getInputStream());
+            Customer newCustomer = (Customer) inputStream.readObject();
+
+            System.out.println(newCustomer);
+
+            // Найти созданного пользователя через Request
+            // И установить ему данные, полученные из CRM
+            ((User) r.getBody()).setCustomer_id(newCustomer.getCustomer_id());
+
+            // Найти пользователя по Id и поменять ему cusstomer_id
+//            users.stream()
+//                    .filter(u->u.getUser_id() == newCustomer.getUser_id())
+//                    .findFirst()
+//                        .get()
+//                        .setCustomer_id(newCustomer.getCustomer_id());
+
+            connect.close();
+
+        }catch (Exception e) {
+
+        }
+    }
+
 
     private void commandShowAll() {
         System.out.println("\n+------------------------------+\n");
