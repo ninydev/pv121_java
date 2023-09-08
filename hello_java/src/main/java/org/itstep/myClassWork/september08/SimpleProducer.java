@@ -3,6 +3,9 @@ package org.itstep.myClassWork.september08;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.itstep.myClassWork.september06.models.User;
+
+import java.util.UUID;
 
 public class SimpleProducer {
 
@@ -10,7 +13,20 @@ public class SimpleProducer {
 
     public static void main(String[] args){
         MyRabbitMQ rabbitMQ = new MyRabbitMQ();
-        rabbitMQ.publish("Hello Object");
+//        for (int i = 0; i < 3; i++) {
+//            rabbitMQ.publish("Hello Object: " + i);
+//            try {
+//                Thread.sleep(100);
+//            } catch (Exception e) {}
+//        }
+
+        User u = new User();
+        u.setName("Vasya");
+        u.setUser_id(UUID.randomUUID());
+
+        rabbitMQ.publish(u);
+
+
         rabbitMQ.disconnect();
     }
 

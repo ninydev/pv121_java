@@ -15,7 +15,7 @@ public class SimpleConsumer {
         MyRabbitMQ rabbitMQ = new MyRabbitMQ();
 
         rabbitMQ.useConsume((consumerTag, delivery) -> {
-            String data = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            Object data = DTOObject.toObject(delivery.getBody());
             System.out.println(data);}
         );
 

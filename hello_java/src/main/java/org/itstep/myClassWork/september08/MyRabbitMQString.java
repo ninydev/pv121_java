@@ -7,14 +7,14 @@ import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 
-public class MyRabbitMQ implements Runnable
+public class MyRabbitMQString implements Runnable
 {
     private static final String queueName = "app.events";
     private ConnectionFactory factory;
     private Connection connection;
     private Channel channel;
 
-    public MyRabbitMQ(){
+    public MyRabbitMQString(){
         factory = new ConnectionFactory();
         factory.setHost("localhost");
         factory.setUsername("user");
@@ -44,10 +44,9 @@ public class MyRabbitMQ implements Runnable
         deliverCallback = cb;
     }
 
-    public void publish (Object o) {
+    public void publish (String o) {
         try {
-            channel.basicPublish("", queueName, null,
-                    DTOObject.toBytes(o));
+            channel.basicPublish("", queueName, null, o.getBytes());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(); // Выйти из ПО
