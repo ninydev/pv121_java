@@ -10,7 +10,23 @@ import java.nio.charset.StandardCharsets;
 public class SimpleConsumer {
 
     private static final String queueName = "app.events";
+
     public static void main(String[] args){
+        MyRabbitMQ rabbitMQ = new MyRabbitMQ();
+
+        rabbitMQ.useConsume((consumerTag, delivery) -> {
+            String data = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            System.out.println(data);}
+        );
+
+        Thread t = new Thread(rabbitMQ);
+        t.start();
+    }
+
+
+
+
+    public static void mainInLine(String[] args){
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         factory.setUsername("user");
@@ -31,10 +47,18 @@ public class SimpleConsumer {
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+            while (true) {
+                try {
+                    Thread.sleep(500);
+                } catch (Exception e) {
 
+                }
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+
 
     }
 

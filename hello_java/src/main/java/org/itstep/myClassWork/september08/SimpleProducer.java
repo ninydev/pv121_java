@@ -7,7 +7,17 @@ import com.rabbitmq.client.ConnectionFactory;
 public class SimpleProducer {
 
     private static final String queueName = "app.events";
+
     public static void main(String[] args){
+        MyRabbitMQ rabbitMQ = new MyRabbitMQ();
+        rabbitMQ.publish("Hello Object");
+        rabbitMQ.disconnect();
+    }
+
+
+
+
+    public static void mainInline(String[] args){
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         factory.setUsername("user");
