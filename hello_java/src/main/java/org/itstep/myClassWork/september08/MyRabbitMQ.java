@@ -9,12 +9,19 @@ import java.io.IOException;
 
 public class MyRabbitMQ implements Runnable
 {
-    private static final String queueName = "app.events";
+    private String queueName = "app.events";
     private ConnectionFactory factory;
     private Connection connection;
     private Channel channel;
 
-    public MyRabbitMQ(){
+    public MyRabbitMQ() {
+        this("app.events");
+    }
+
+    public MyRabbitMQ(String queueName)
+    {
+        this.queueName = queueName;
+
         factory = new ConnectionFactory();
         factory.setHost("localhost");
         factory.setUsername("user");
@@ -23,7 +30,7 @@ public class MyRabbitMQ implements Runnable
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
-
+            channel.queueDeclare(queueName, false, false, false, null);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(); // Выйти из ПО
@@ -58,7 +65,10 @@ public class MyRabbitMQ implements Runnable
     public void run() {
         try {
             while (true) {
-                channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+                if(deliverCallback != null) {
+                    channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
+                    });
+                }
                 Thread.sleep(100);
             }
         } catch (Exception e) {
