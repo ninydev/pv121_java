@@ -44,43 +44,9 @@ public class Site {
         newUser.setName(name);
         newUser.setUser_id(UUID.randomUUID());
         newUser.setCustomer_id(null);
-
         users.add(newUser);
-        // Событие регистрации наступило
-
-        Request r = new Request(RequestCommands.userRegister, newUser);
-        sendToCRM(r);
     }
 
-    private void sendToCRM(Request r) {
-        try {
-            Socket connect = new Socket("localhost", 33123);
-            ObjectOutputStream outputStream = new ObjectOutputStream(connect.getOutputStream());
-            outputStream.writeObject(r);
-
-            ObjectInputStream inputStream = new ObjectInputStream(connect.getInputStream());
-            Response res = (Response) inputStream.readObject();
-            Customer newCustomer = (Customer)res.getBody();
-
-            System.out.println(newCustomer);
-
-            // Найти созданного пользователя через Request
-            // И установить ему данные, полученные из CRM
-            ((User) r.getBody()).setCustomer_id(newCustomer.getCustomer_id());
-
-            // Найти пользователя по Id и поменять ему cusstomer_id
-//            users.stream()
-//                    .filter(u->u.getUser_id() == newCustomer.getUser_id())
-//                    .findFirst()
-//                        .get()
-//                        .setCustomer_id(newCustomer.getCustomer_id());
-
-            connect.close();
-
-        }catch (Exception e) {
-
-        }
-    }
 
 
     private void commandShowAll() {
