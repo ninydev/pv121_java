@@ -23,14 +23,15 @@ public class CRM {
         // Это Consumer
         rabbitMQSiteUserRegister = new MyRabbitMQ("site.user.register");
         rabbitMQSiteUserRegister.useConsume(this.listenerUserRegister);
+        new Thread(rabbitMQSiteUserRegister).start();
 
         // Я сообщаю сайту, что пользователь обновился
         // Это Producer
-        rabbitMQCRMCreateCustomer = new MyRabbitMQ("crm.customer.update");
+        rabbitMQCRMCustomerUpdate = new MyRabbitMQ("crm.customer.update");
     }
 
     private MyRabbitMQ rabbitMQSiteUserRegister;
-    private MyRabbitMQ rabbitMQCRMCreateCustomer;
+    private MyRabbitMQ rabbitMQCRMCustomerUpdate;
 
     DeliverCallback listenerUserRegister = (consumerTag, delivery) -> {
         // Таким образом я получаю тут пользователя
@@ -38,7 +39,7 @@ public class CRM {
         Customer c = Customer.fromUser(u);
 
         customers.add(c);
-        rabbitMQCRMCreateCustomer.publish(c);
+        rabbitMQCRMCustomerUpdate.publish(c);
     };
 
 
@@ -57,7 +58,7 @@ public class CRM {
 
         } while (userChoice != 0);
 
-        rabbitMQCRMCreateCustomer.disconnect();
+        rabbitMQCRMCustomerUpdate.disconnect();
         rabbitMQSiteUserRegister.disconnect();
     }
 

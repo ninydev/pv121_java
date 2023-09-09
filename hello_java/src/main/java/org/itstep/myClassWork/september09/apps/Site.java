@@ -1,15 +1,16 @@
 package org.itstep.myClassWork.september09.apps;
 
-import org.itstep.myClassWork.september06.models.Customer;
-import org.itstep.myClassWork.september06.models.User;
-import org.itstep.myClassWork.september06.servers.Request;
-import org.itstep.myClassWork.september06.servers.RequestCommands;
-import org.itstep.myClassWork.september06.servers.Response;
+
+import com.rabbitmq.client.DeliverCallback;
+import org.itstep.myClassWork.september09.models.Customer;
+import org.itstep.myClassWork.september09.models.User;
+import org.itstep.myClassWork.september09.services.MyRabbitMQ;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -21,7 +22,31 @@ public class Site {
         return users;
     }
 
-    public Site(){}
+    public Site(){
+        rabbitMQSiteUserRegister = new MyRabbitMQ("site.user.register");
+
+        rabbitMQCRMCustomerUpdate = new MyRabbitMQ("crm.customer.update");
+        rabbitMQCRMCustomerUpdate.useConsume(listenerCrmCustomerUpdate);
+        new Thread(rabbitMQCRMCustomerUpdate).start();
+    }
+
+    DeliverCallback listenerCrmCustomerUpdate  = (consumerTag, delivery) -> {
+        Customer c = Customer.fromBytes(delivery.getBody());
+        Optional<User> user = users.stream()
+                .filter(u ->  u.getUser_id().equals(c.getUser_id()) )
+                .findFirst();
+        if (user.isEmpty()) {
+            System.out.println(" Ошибка синхронизации");
+        } else {
+            user.get().updateFromCustomer(c);
+        }
+
+
+    };
+
+    private MyRabbitMQ rabbitMQSiteUserRegister;
+    private MyRabbitMQ rabbitMQCRMCustomerUpdate;
+
 
     public void run() {
         int userChoice;
@@ -35,6 +60,8 @@ public class Site {
             }
 
         } while (userChoice != 0);
+        rabbitMQCRMCustomerUpdate.disconnect();
+        rabbitMQSiteUserRegister.disconnect();
     }
 
     private void commandUserRegister(){
@@ -45,6 +72,8 @@ public class Site {
         newUser.setUser_id(UUID.randomUUID());
         newUser.setCustomer_id(null);
         users.add(newUser);
+
+        rabbitMQSiteUserRegister.publish(newUser);
     }
 
 
