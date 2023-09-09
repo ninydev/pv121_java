@@ -1,7 +1,9 @@
 package org.itstep.myClassWork.september09.apps;
 
-import org.itstep.myClassWork.september06.models.Customer;
-import org.itstep.myClassWork.september06.models.User;
+import com.rabbitmq.client.DeliverCallback;
+import org.itstep.myClassWork.september09.models.Customer;
+import org.itstep.myClassWork.september09.models.User;
+import org.itstep.myClassWork.september09.services.MyRabbitMQ;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -16,7 +18,30 @@ public class CRM {
         return customers;
     }
 
-    public CRM(){}
+    public CRM(){
+        // Я мониторю события, связанные с созданием нового пользователя на сайте
+        // Это Consumer
+        rabbitMQSiteUserRegister = new MyRabbitMQ("site.user.register");
+        rabbitMQSiteUserRegister.useConsume(this.listenerUserRegister);
+
+        // Я сообщаю сайту, что пользователь обновился
+        // Это Producer
+        rabbitMQCRMCreateCustomer = new MyRabbitMQ("crm.customer.update");
+    }
+
+    private MyRabbitMQ rabbitMQSiteUserRegister;
+    private MyRabbitMQ rabbitMQCRMCreateCustomer;
+
+    DeliverCallback listenerUserRegister = (consumerTag, delivery) -> {
+        // Таким образом я получаю тут пользователя
+        User u = User.fromBytes(delivery.getBody());
+        Customer c = Customer.fromUser(u);
+
+        customers.add(c);
+        rabbitMQCRMCreateCustomer.publish(c);
+    };
+
+
 
     public void run() {
         int userChoice;
@@ -31,17 +56,11 @@ public class CRM {
             }
 
         } while (userChoice != 0);
+
+        rabbitMQCRMCreateCustomer.disconnect();
+        rabbitMQSiteUserRegister.disconnect();
     }
 
-
-    public Customer createCustomerFromUser(User user){
-        Customer c = new Customer();
-        c.setUser_id(user.getUser_id());
-        c.setName(user.getName());
-        c.setCustomer_id(UUID.randomUUID());
-        customers.add(c);
-        return c;
-    }
 
     private void commandAddCustomer(){
         System.out.print("Введите имя: ");

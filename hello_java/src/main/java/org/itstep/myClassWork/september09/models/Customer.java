@@ -69,4 +69,14 @@ public class Customer implements Serializable, SerializableToBytes
 
         return c;
     }
+
+    public static Customer fromUser(User u){
+        Customer c = new Customer();
+        c.setUser_id(u.getUser_id());
+        c.setName(u.getName());
+
+        c.setCustomer_id(UUID.randomUUID());
+
+        return c;
+    }
 }
