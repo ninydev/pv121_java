@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Правила для реализации репозитория для сущности
+ */
 @Repository
 public interface BookRepository extends JpaRepository<Book, UUID>
 {
