@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +21,6 @@ public class SomePerson {
     private UUID id;
     private String name;
 
-    @OneToMany(mappedBy = "person") // Имя поля в сущности
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER) // Имя поля в сущности
     private Set<SomeDocument> documents = new HashSet<>();
 }
