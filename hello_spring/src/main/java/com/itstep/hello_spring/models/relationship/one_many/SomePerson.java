@@ -18,9 +18,18 @@ import java.util.UUID;
 public class SomePerson {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID id = UUID.randomUUID();
     private String name;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.EAGER) // Имя поля в сущности
     private Set<SomeDocument> documents = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "x_person_groups",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn (name = "group_id")
+    )
+    private Set<SomeGroup> groups = new HashSet<>();
+
 }
