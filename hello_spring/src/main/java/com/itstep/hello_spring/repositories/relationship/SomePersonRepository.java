@@ -26,4 +26,17 @@ public interface SomePersonRepository extends JpaRepository<SomePerson, UUID>
      */
     @Query("SELECT p FROM SomePerson p WHERE p.name=:name")
     ArrayList<SomePerson> myFindByName(String name);
+
+    /**
+     * Когда я прописываю findBy{ColumnName}
+     * @Query("SELECT p FROM SomePerson p WHERE p.{ColumnName}=:var")
+     */
+    SomePerson findByName(String name);
+
+    // @Query("SELECT p FROM SomePerson p WHERE LIKE %:name% ")
+    SomePerson findByNameContains(String name);
+
+    // @Query("SELECT p FROM SomePerson p WHERE LIKE :name% ")
+    SomePerson findByNameStartsWith(String name);
+
 }
