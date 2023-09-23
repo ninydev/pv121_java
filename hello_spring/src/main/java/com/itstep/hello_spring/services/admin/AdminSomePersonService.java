@@ -4,6 +4,7 @@ import com.itstep.hello_spring.models.relationship.one_many.SomePerson;
 import com.itstep.hello_spring.services.SomePersonService;
 import com.itstep.hello_spring.viewModels.admin.SomePersonAdminResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,7 @@ public class AdminSomePersonService {
         this.personService = personService;
     }
 
+    @Cacheable(value = "persons", key = "'allAdminPersons'", unless = "#result == null")
     public SomePersonAdminResponse findAll() {
         return new SomePersonAdminResponse(
                 true,

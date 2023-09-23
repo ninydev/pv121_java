@@ -3,6 +3,7 @@ package com.itstep.hello_spring.controllers.forServices;
 import com.itstep.hello_spring.models.relationship.one_many.SomePerson;
 import com.itstep.hello_spring.services.SomePersonService;
 import com.itstep.hello_spring.services.admin.AdminSomePersonService;
+import com.itstep.hello_spring.services.helpers.EmailService;
 import com.itstep.hello_spring.viewModels.admin.SomePersonAdminResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +17,22 @@ public class ApiAdminPersonController {
     SomePersonService personService;
     final
     AdminSomePersonService adminSomePersonService;
+    final
+    EmailService emailService;
 
     public ApiAdminPersonController(
             SomePersonService personService,
-            AdminSomePersonService adminSomePersonService
+            AdminSomePersonService adminSomePersonService,
+            EmailService emailService
     ) {
         this.personService = personService;
         this.adminSomePersonService = adminSomePersonService;
+        this.emailService = emailService;
     }
 
     @GetMapping("")
     public Iterable<SomePerson> getAllPersons(){
+        emailService.sendEmail("keeper@ninydev.com", "test", "Test");
         return personService.findAll();
     }
 
