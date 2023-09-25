@@ -3,6 +3,7 @@ package com.itstep.hello_spring.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -29,6 +30,9 @@ public class EmailConfig {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private boolean starttls;
 
+    @Value("${spring.mail.from}")
+    private String from;
+
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -43,5 +47,12 @@ public class EmailConfig {
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
         return mailSender;
+    }
+
+    @Bean
+    public SimpleMailMessage simpleMailMessage() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from); // Устанавливаем "от кого"
+        return message;
     }
 }
