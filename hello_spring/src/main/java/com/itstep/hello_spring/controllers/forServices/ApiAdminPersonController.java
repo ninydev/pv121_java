@@ -32,7 +32,7 @@ public class ApiAdminPersonController {
 
     @GetMapping("")
     public Iterable<SomePerson> getAllPersons(){
-        emailService.sendEmail("keeper@ninydev.com", "test", "Test");
+        emailService.sendEmail("keeper@ninydev.com", "Test", "Body");
         return personService.findAll();
     }
 
