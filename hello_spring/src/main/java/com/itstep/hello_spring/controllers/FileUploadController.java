@@ -1,30 +1,35 @@
 package com.itstep.hello_spring.controllers;
 
+import com.itstep.hello_spring.services.helpers.MinioFileService;
+import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 @RestController
 @RequestMapping("api/files")
 public class FileUploadController {
+
+    final MinioFileService minioFileService;
+    public FileUploadController (
+            MinioFileService minioFileService){
+        this.minioFileService = minioFileService;
+    }
 
     // Папка для загрузки файлов
     // private static final String UPLOAD_DIR = "/home/keeper/upload";
@@ -57,11 +62,15 @@ public class FileUploadController {
     @PostMapping("/upload")
     public String upload(
             @RequestParam("file")MultipartFile uploadFile
-            ) throws IOException {
+            ) throws IOException, MinioException, NoSuchAlgorithmException, InvalidKeyException {
         // Проверяем - а прислал ли нам пользователь файл вообще
         if( uploadFile.isEmpty()) {
             return " No File in Request";
         }
+
+        // Версия загрузки в MinIO
+        minioFileService.uploadFile("avatar", uploadFile);
+
 
         // Проверяем - есть ли каталог для сохранения файла
         Path uploadDir= Path.of(UPLOAD_DIR);
@@ -72,7 +81,6 @@ public class FileUploadController {
         Path filePath = uploadDir.resolve(uploadFile.getOriginalFilename());
         // - Собственно говоря - само копирование файла
         Files.copy(uploadFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
 
         return "Ok";
     }
