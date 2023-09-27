@@ -1,5 +1,6 @@
-package com.itstep.hello_spring.services.helpers;
+package com.itstep.hello_spring.services.helpers.storages;
 
+import com.itstep.hello_spring.services.helpers.storages.interfaces.FileUploadServiceInterface;
 import io.minio.*;
 import io.minio.errors.*;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 @Service
-public class MinioFileService {
+public class MinioFileService  implements FileUploadServiceInterface {
 
     private final MinioClient minioClient;
 

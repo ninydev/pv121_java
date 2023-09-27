@@ -1,6 +1,8 @@
 package com.itstep.hello_spring.controllers;
 
-import com.itstep.hello_spring.services.helpers.MinioFileService;
+import com.itstep.hello_spring.services.helpers.storages.LocalFileService;
+import com.itstep.hello_spring.services.helpers.storages.MinioFileService;
+import com.itstep.hello_spring.services.helpers.storages.interfaces.FileUploadServiceInterface;
 import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +28,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class FileUploadController {
 
     final MinioFileService minioFileService;
+    final LocalFileService localFileService;
     public FileUploadController (
-            MinioFileService minioFileService){
+            MinioFileService minioFileService, LocalFileService localFileService){
         this.minioFileService = minioFileService;
+        this.localFileService = localFileService;
     }
 
     // Папка для загрузки файлов
@@ -70,17 +74,16 @@ public class FileUploadController {
 
         // Версия загрузки в MinIO
         minioFileService.uploadFile("avatar", uploadFile);
+        // Версия загрузки локально
+        localFileService.uploadFile("avatar", uploadFile);
 
+        // SOLID
 
-        // Проверяем - есть ли каталог для сохранения файла
-        Path uploadDir= Path.of(UPLOAD_DIR);
-        Files.createDirectories(uploadDir);
+        FileUploadServiceInterface service = minioFileService;
+        service.uploadFile("avatar", uploadFile);
 
-        // Сохраним файл в нужной нам дирректории
-        // - Настроим полный путь к месту хранения файла
-        Path filePath = uploadDir.resolve(uploadFile.getOriginalFilename());
-        // - Собственно говоря - само копирование файла
-        Files.copy(uploadFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        service = localFileService;
+        service.uploadFile("avatar", uploadFile);
 
         return "Ok";
     }
