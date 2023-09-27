@@ -1,7 +1,10 @@
-package com.itstep.hello_spring.services.bar.interfaces;
+package com.itstep.hello_spring.services.bar;
 
 import com.itstep.hello_spring.models.bar.Coffee;
+import com.itstep.hello_spring.services.bar.interfaces.SemParentInterface;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SemService implements SemParentInterface
 {
     @Override
