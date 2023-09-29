@@ -2,6 +2,8 @@ package com.itstep.hello_spring.controllers;
 
 import com.itstep.hello_spring.services.helpers.storages.LocalFileService;
 import com.itstep.hello_spring.services.helpers.storages.MinioFileService;
+import com.itstep.hello_spring.services.helpers.storages.StorageService;
+import com.itstep.hello_spring.services.helpers.storages.StorageTypes;
 import com.itstep.hello_spring.services.helpers.storages.interfaces.FileUploadServiceInterface;
 import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +31,16 @@ public class FileUploadController {
 
     final MinioFileService minioFileService;
     final LocalFileService localFileService;
+    final StorageService storageService;
+
     public FileUploadController (
-            MinioFileService minioFileService, LocalFileService localFileService){
+            MinioFileService minioFileService,
+            LocalFileService localFileService,
+            StorageService storageService
+    ){
         this.minioFileService = minioFileService;
         this.localFileService = localFileService;
+        this.storageService = storageService;
     }
 
     // Папка для загрузки файлов
@@ -74,8 +82,18 @@ public class FileUploadController {
 
         // Версия загрузки в MinIO
         minioFileService.uploadFile("avatar", uploadFile);
+        storageService.to(StorageTypes.minio).uploadFile("avatar",uploadFile);
+
         // Версия загрузки локально
         localFileService.uploadFile("avatar", uploadFile);
+        storageService.to(StorageTypes.local).uploadFile("avatar",uploadFile);
+
+        // Загрузка в хранилище по умолчанию
+        storageService.uploadFile("avatar", uploadFile);
+
+        // Storage.to("MinIo").uploadFile(...)
+        // Storage.to("Local").uploadFile(...)
+        // Storage.uploadFile(...) - по умолчанию
 
         // SOLID
 
