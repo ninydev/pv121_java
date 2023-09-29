@@ -1,9 +1,6 @@
 package com.itstep.hello_spring.controllers;
 
-import com.itstep.hello_spring.services.helpers.storages.LocalFileService;
-import com.itstep.hello_spring.services.helpers.storages.MinioFileService;
-import com.itstep.hello_spring.services.helpers.storages.StorageService;
-import com.itstep.hello_spring.services.helpers.storages.StorageTypes;
+import com.itstep.hello_spring.services.helpers.storages.*;
 import com.itstep.hello_spring.services.helpers.storages.interfaces.FileUploadServiceInterface;
 import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +37,8 @@ public class FileUploadController {
     ){
         this.minioFileService = minioFileService;
         this.localFileService = localFileService;
+        // Этот сервис является оболочкой для других
+        // такоим образом - мне не важно будет в коде вообще количество хранилищ
         this.storageService = storageService;
     }
 
@@ -80,28 +79,34 @@ public class FileUploadController {
             return " No File in Request";
         }
 
+
+
         // Версия загрузки в MinIO
         minioFileService.uploadFile("avatar", uploadFile);
         storageService.to(StorageTypes.minio).uploadFile("avatar",uploadFile);
+        Storage.to(StorageTypes.minio).uploadFile("avatar",uploadFile);
 
         // Версия загрузки локально
         localFileService.uploadFile("avatar", uploadFile);
         storageService.to(StorageTypes.local).uploadFile("avatar",uploadFile);
+        Storage.to(StorageTypes.local).uploadFile("avatar",uploadFile);
 
         // Загрузка в хранилище по умолчанию
         storageService.uploadFile("avatar", uploadFile);
+        Storage.uploadFile("avatar", uploadFile);
 
+        Storage.uploadFile("avatar", uploadFile);
         // Storage.to("MinIo").uploadFile(...)
         // Storage.to("Local").uploadFile(...)
         // Storage.uploadFile(...) - по умолчанию
 
         // SOLID
 
-        FileUploadServiceInterface service = minioFileService;
-        service.uploadFile("avatar", uploadFile);
-
-        service = localFileService;
-        service.uploadFile("avatar", uploadFile);
+//        FileUploadServiceInterface service = minioFileService;
+//        service.uploadFile("avatar", uploadFile);
+//
+//        service = localFileService;
+//        service.uploadFile("avatar", uploadFile);
 
         return "Ok";
     }
