@@ -1,21 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>WebSocket Chat</title>
+    <style>
+        /* Стили для чатика */
+        #chat-container {
+            width: 300px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #messages {
+            height: 200px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
+<div id="chat-container">
+    <h2>WebSocket Chat</h2>
+    <div id="messages"></div>
+    <input type="text" id="sender" placeholder="Your Name">
+    <input type="text" id="message" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+</div>
 
-<header>
-    <h1>Hello World</h1>
-</header>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script>
+    // var webSocket = new WebSocket("ws://localhost:8080/ws"); // Замените на URL вашего WebSocket сервера
+    var webSocket = new SockJS("/ws"); // Замените на URL вашего WebSocket сервера
 
-<main>
-    <article>
-        <h1> Article title </h1>
-    </article>
-</main>
+    webSocket.onopen = function () {
+        console.log('Connected to WebSocket');
+    };
 
+    webSocket.onerror = function (error) {
+        console.error('WebSocket Error: ' + error);
+    };
 
+    webSocket.onmessage = function (e) {
+        var msg = JSON.parse(e.data);
+        var messageText = msg.sender + ": " + msg.content;
+        var messagesDiv = document.getElementById("messages");
+        messagesDiv.innerHTML += "<p>" + messageText + "</p>";
+    };
+
+    function sendMessage() {
+        var sender = document.getElementById("sender").value;
+        var message = document.getElementById("message").value;
+        var chatMessage = {
+            content: message,
+            sender: sender
+        };
+        webSocket.send(JSON.stringify(chatMessage));
+        document.getElementById("message").value = ""; // Очистить поле ввода сообщения
+    }
+</script>
 </body>
 </html>
