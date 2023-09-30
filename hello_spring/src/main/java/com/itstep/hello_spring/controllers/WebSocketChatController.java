@@ -11,6 +11,7 @@ public class WebSocketChatController {
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
     public ChatMessage send (ChatMessage message) {
+
         return message;
     }
 }
