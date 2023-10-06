@@ -1,0 +1,15 @@
+{
+    "name": "keeper/src",
+    "autoload": {
+        "psr-4": {
+            "Keeper\\Src\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Oleksandr Nykytin",
+            "email": "keeper@ninydev.com"
+        }
+    ],
+    "require": {}
+}

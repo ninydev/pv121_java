@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+
+
+  app.monolith:
+    container_name: app.monolith
+    ports:
+      - "8000:8000"
+    build:
+      context: ./src
+      dockerfile: DockerFile
+    networks:
+      - xampp8
+
+
+  db.phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "3030:80"
+    environment:
+      - PMA_HOST=db.mysql # имя контейнера с базой
+      - PMA_PORT=3306 # порт внутри сети
+    networks:
+      - xampp8
+
+  db.mysql:
+    container_name: db.mysql
+    # Если у меня нет доке файла (мне просто нужен контейнер) я могу сразу взять его образ
+#    image: mysql:latest
+    # Я создал отдельный DockerFile - по этому я строю его этой командой
+    build:
+      context: ./dockers/mysql
+      dockerfile: DockerFile
+    # Для доступа к базе данных мне нужно предоставить доступ к порту
+    # Мы описываем правило - внешний порт: внутренний порт
+    # Эта операция не нужна, если доступ в базу снаружи (вне докера) не нужен
+    ports:
+      - "3306:3306"
+    # Подключаю внешнее хранилище во внутреннюю папку. Таким образом данные будут
+    # лежать файлы базы. Если этого не сделать - то докер создат место сам
+    volumes:
+      - ./volumes/db/mysql:/var/lib/mysql
+    # Переменные для настройки сервиса (я узнаю из документации https://hub.docker.com/_/mysql
+    # Я могу прописать их тут, ИЛИ в .env файле
+#    env_file:
+#      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    # Внутри какой сети живет этот контейнер
+    networks:
+      - xampp8
+
+networks:
+  xampp8:
+    driver: bridge
