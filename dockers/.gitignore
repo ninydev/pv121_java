@@ -1,4 +1,8 @@
 .idea
 volumes
+
 vendor
+composer.lock
+
 .env
+
