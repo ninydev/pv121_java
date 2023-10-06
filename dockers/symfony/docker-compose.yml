@@ -6,12 +6,13 @@ services:
   app.monolith:
     container_name: app.monolith
     ports:
-      - "80:80"
+      - "80:8000"
     build:
       context: ./monolith
       dockerfile: DockerFile
     networks:
-      - xampp8
+      - simfony
+
 
   db.phpmyadmin:
     image: phpmyadmin
@@ -21,7 +22,7 @@ services:
       - PMA_HOST=db.mysql # имя контейнера с базой
       - PMA_PORT=3306 # порт внутри сети
     networks:
-      - xampp8
+      - simfony
 
   db.mysql:
     container_name: db.mysql
@@ -48,8 +49,8 @@ services:
       MYSQL_ROOT_PASSWORD: password
     # Внутри какой сети живет этот контейнер
     networks:
-      - xampp8
+      - simfony
 
 networks:
-  xampp8:
+  simfony:
     driver: bridge

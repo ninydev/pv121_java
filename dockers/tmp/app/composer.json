@@ -2,7 +2,7 @@
     "name": "keeper/src",
     "autoload": {
         "psr-4": {
-            "Keeper\\Src\\": "src/"
+            "Keeper\\Src\\": "app/"
         }
     },
     "authors": [
