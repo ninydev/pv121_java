@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/book")
+@CrossOrigin(origins = "http://localhost:8088", maxAge = 3600)
 public class ApiBookController {
 
     private final BookRepository bookRepository;

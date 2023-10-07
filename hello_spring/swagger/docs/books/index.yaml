@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: Books
+  description: Мои операции с книгами
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+  - url: 'https://ninydev.com'
+paths:
+  /api/book:
+    post:
+      tags:
+        - Books
+      summary: Создание новой книги
+      description: Пока я тут описываю - я понимаю - что я хочу сделать
+      # Что я ожидаю в запросе вообще
+      requestBody:
+        content:
+          # Какую схему долен использовать фронт что бы попасть сюда
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  name: title
+                  description: Название книги
+                  type: string
+                  minLength: 0
+                  maxLength: 255
+      responses:
+        200:
+          description: Все прошло хорошо
+        400:
+          description: Что то пошло не так
+
+
+
+
+  
