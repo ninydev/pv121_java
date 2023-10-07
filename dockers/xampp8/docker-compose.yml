@@ -7,6 +7,7 @@ services:
     container_name: app.monolith
     ports:
       - "80:80"
+      - "6379:6379"
     build:
       context: ./monolith
       dockerfile: DockerFile
