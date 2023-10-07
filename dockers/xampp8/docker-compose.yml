@@ -5,9 +5,19 @@ services:
 
   app.monolith:
     container_name: app.monolith
+    # Операция подключит внешний носитель
+    # но в то же самое время - затрет все изменения
+    # Которые были произведены в момент сборки контейнера
+    volumes:
+      - ./monolith/src:/var/www/html
+    # В таком случае можно описать команду, которая будет вызываться каждый раз
+    # при старте контейнера (уже после его сборки)
+    # метод удобен для разработчиков PHP, NodeJS
+#    command: sh -c "composer update && supervisord -c /etc/supervisor/conf.d/supervisord.conf" #  && /var/www/html/artisan serve --host=0.0.0.0"
+    # Второй вариант - описать установку зависимостей в supervisor - как
+    # одноразово запускаемую задачу
     ports:
       - "80:80"
-      - "6379:6379"
     build:
       context: ./monolith
       dockerfile: DockerFile
