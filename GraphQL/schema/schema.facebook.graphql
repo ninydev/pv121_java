@@ -1,0 +1,31 @@
+type User {
+    name: String!
+    posts: [Post]
+    comments: [Comment]
+    likes: [Like]
+}
+
+type Post {
+    title: String!
+    author: User
+    comments: [Comment]
+    likes: [Like]
+}
+
+type Comment {
+    title: String!
+    post: Post
+    author: User
+}
+
+type Like {
+    post: Post
+    author: User
+}
+
+type Query {
+    users: [User]
+    posts: [Post]
+    comments: [Comment]
+    likes: [Like]
+}
