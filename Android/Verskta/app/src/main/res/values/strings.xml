@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Verskta</string>
+
+    <string name="hello">Hello</string>
+    <string name="system">Android</string>
+    <string name="world">World</string>
+</resources>
