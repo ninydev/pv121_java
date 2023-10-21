@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.itstep.verskta.listeners.MyBtnOnClickListener;
 import com.itstep.verskta.textwatchers.MyTextWatcher;
+import com.itstep.verskta.validations.MyRegisterFromValidator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,13 +22,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toast(String msg) {
-        Toast.makeText(this.getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
 
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.register_form);
+
+            MyRegisterFromValidator validator = new MyRegisterFromValidator(this);
+
+//            ((EditText)findViewById(R.id.inpEmail)).addTextChangedListener(validator);
+//            ((EditText)findViewById(R.id.inpPassword)).addTextChangedListener(validator);
+//            ((EditText)findViewById(R.id.inpPasswordConfirm)).addTextChangedListener(validator);
+
         }
 
 
