@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/txtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello Activity Main!"
@@ -16,13 +17,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/inpText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/txtView">
+
+    </EditText>
+
     <Button
         android:id="@+id/btnClickMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello Btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello Btn" />
+        app:layout_constraintTop_toBottomOf="@+id/inpText" />
 
 </android.support.constraint.ConstraintLayout>

@@ -3,12 +3,16 @@ package com.itstep.verskta;
 import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.itstep.verskta.listeners.MyBtnOnClickListener;
+import com.itstep.verskta.textwatchers.MyTextWatcher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,19 +25,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public MainActivity(){
-        super();
-        log("Constructor");
-    }
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.register_form);
+        }
+
+
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//
+//        EditText inp = (EditText) findViewById(R.id.inpText);
+//
+//        inp.addTextChangedListener(new MyTextWatcher(this));
+//
+//        View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    // Вызывается, когда EditText теряет фокус (пользователь переходит к другому элементу)
+//                    EditText editText = (EditText) v;
+//                    String enteredText = editText.getText().toString();
+//                    // Здесь вы можете обрабатывать текст
+//                    toast(enteredText);
+//                }
+//            }
+//        };
+//
+//        inp.setOnFocusChangeListener(onFocusChangeListener);
+//
+//    }
+
+
 
 
     /**
      * В этой точчке я уже могу работать с элементами верстки.
      * @param savedInstanceState
      */
-    @SuppressLint("MissingInflatedId")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreateBtn(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         log("onCreate");
@@ -66,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         // Второй вариант - когда я описываю слушателя отдельно, реализую в нем интерфейс, нужный мне
         // и назначаю его тут
         btn.setOnClickListener(new MyBtnOnClickListener(this));
+
 
 
 
