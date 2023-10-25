@@ -1,6 +1,7 @@
 package com.itstep.verskta;
 
 import android.annotation.SuppressLint;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.itstep.verskta.listeners.MyBtnOnClickListener;
@@ -25,18 +27,85 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
 
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.register_form);
+        createMemoryGamePad();
 
-            MyRegisterFromValidator validator = new MyRegisterFromValidator(this);
+    }
 
-//            ((EditText)findViewById(R.id.inpEmail)).addTextChangedListener(validator);
-//            ((EditText)findViewById(R.id.inpPassword)).addTextChangedListener(validator);
-//            ((EditText)findViewById(R.id.inpPasswordConfirm)).addTextChangedListener(validator);
+    protected void createMemoryGamePad() {
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
 
-        }
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.scorpion);
+
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+
+        imageView.setLayoutParams(layoutParams);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toast("Click");
+            }
+        });
+
+        constraintLayout.addView(imageView);
+
+        setContentView(constraintLayout);
+    }
+
+    protected void createElements() {
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+
+        // Создадим элемент элемент класса
+        // document.crateElement("button");
+        Button btn = new Button(this);
+        btn.setText(" Hello World");
+
+        // Параметры отображения элемента зависят от типа layout в котором но будет находиться
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+
+        // Мне необходимо назначить параметры на нужный мне элемент
+        btn.setLayoutParams(layoutParams);
+
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toast("Hello World");
+//            }
+//        });
+
+        // Добавим элемент в layout
+        // div.appendChild(btn");
+        constraintLayout.addView(btn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toast("Hello World After addView");
+            }
+        });
+
+        setContentView(constraintLayout);
+    }
+
+
+
+
+//    protected void onCreate(Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.register_form);
+//
+//            MyRegisterFromValidator validator = new MyRegisterFromValidator(this);
+//
+////            ((EditText)findViewById(R.id.inpEmail)).addTextChangedListener(validator);
+////            ((EditText)findViewById(R.id.inpPassword)).addTextChangedListener(validator);
+////            ((EditText)findViewById(R.id.inpPasswordConfirm)).addTextChangedListener(validator);
+//
+//        }
 
 
 //    protected void onCreate(Bundle savedInstanceState) {
