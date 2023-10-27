@@ -1,7 +1,11 @@
 package com.itstep.verskta;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,25 +17,73 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+// import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+
 import com.itstep.verskta.listeners.MyBtnOnClickListener;
 import com.itstep.verskta.textwatchers.MyTextWatcher;
 import com.itstep.verskta.validations.MyRegisterFromValidator;
 
 public class MainActivity extends AppCompatActivity {
 
-    public void log(String msg) {
-        Log.d("MainActivity", msg);
-    }
+    private static final int REQUEST_INTERNET_PERMISSION = 1;
 
-    public void toast(String msg) {
-        Toast.makeText(this.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    /**
+     * Перед каждой операцией, связанной с запросом приложения в сеть, нужно вызывать этот метод
+     */
+    public void checkPermissionInternet(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+            // Разрешение на доступ к интернету уже предоставлено. Вы можете выполнять операции, требующие доступ к интернету, здесь.
+        } else {
+            // Разрешение на доступ к интернету не предоставлено. Запросите его у пользователя.
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.INTERNET }, REQUEST_INTERNET_PERMISSION);
+        }
     }
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        createMemoryGamePad();
+        checkPermissionInternet();
+        getImageFromUrlByGlide();
 
+    }
+
+    protected void getImageFromUrlByGlide(){
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+
+        String imageUrl = "https://www.iconsdb.com/icons/preview/orange/cocktail-3-xxl.png";
+
+        ImageView imageView = new ImageView(this);
+
+//        Glide.with(this)
+//                .load(imageUrl)
+//                .into(imageView);
+
+        imageView.setLayoutParams(layoutParams);
+        constraintLayout.addView(imageView);
+        setContentView(constraintLayout);
+    }
+
+    protected void getImageFromUrlByPicasso(){
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+
+        String imageUrl = "https://www.iconsdb.com/icons/preview/orange/cocktail-3-xxl.png";
+
+        ImageView imageView = new ImageView(this);
+
+        Picasso.get()
+                .load(imageUrl)
+                .into(imageView);
+
+        imageView.setLayoutParams(layoutParams);
+        constraintLayout.addView(imageView);
+        setContentView(constraintLayout);
     }
 
     protected void createMemoryGamePad() {
@@ -225,4 +277,14 @@ public class MainActivity extends AppCompatActivity {
 //        super.onDestroy();
 //        log("onDestroy");
 //    }
+
+
+    public void log(String msg) {
+        Log.d("MainActivity", msg);
+    }
+
+    public void toast(String msg) {
+        Toast.makeText(this.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
 }
