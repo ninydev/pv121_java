@@ -3,9 +3,13 @@ package com.itstep.elements;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +38,24 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, countries);
         // Определяем разметку для использования при выборе элемента
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String selectedItem = countries[position];
+                toast("Spinner: " + selectedItem);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                toast("Spinner: Nothing Selected" );
+            }
+        });
+
         // Применяем адаптер к элементу spinner
         spinner.setAdapter(adapter);
+
     }
 
 
@@ -55,7 +75,27 @@ public class MainActivity extends AppCompatActivity {
                 R.layout.my_list_item
                 , countries);
 
+        countriesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String selectedItem = countries[position];
+                toast("ListView: " + selectedItem);
+            }
+        });
+
         // устанавливаем для списка адаптер
         countriesList.setAdapter(adapter);
+    }
+
+
+
+    // System Fun
+
+    public void log(String msg) {
+        Log.d("MainActivity", msg);
+    }
+
+    public void toast(String msg) {
+        Toast.makeText(this.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 }
