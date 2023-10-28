@@ -11,6 +11,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.itstep.elements.adapters.StateAdapter;
+import com.itstep.elements.models.State;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     // набор данных, которые свяжем со списком
@@ -22,8 +28,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Построить свой список
-        buildListView();
+        buildListViewCustomAdapter();
         buildSpinner();
+
+    }
+
+    void buildListViewCustomAdapter(){
+        // получаем элемент ListView
+        // Обольше похож на ul / ol элементы html
+        ListView countriesList = findViewById(R.id.countriesList);
+
+        List<State> states= new ArrayList<>();
+        states.add(new State("England", "London", R.drawable.en));
+        states.add(new State("Ukraine", "Kyiv", R.drawable.ua));
+
+        StateAdapter adapter = new StateAdapter(this, states);
+
+        // устанавливаем для списка адаптер
+        countriesList.setAdapter(adapter);
 
     }
 
