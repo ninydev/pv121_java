@@ -19,7 +19,7 @@ public class StateAdapter extends ArrayAdapter<State>
 {
     private LayoutInflater inflater;
     private int layout;
-    private List<State> states = new ArrayList<>();
+    private List<State> states;
 
 
 
@@ -41,6 +41,11 @@ public class StateAdapter extends ArrayAdapter<State>
         this.inflater = LayoutInflater.from(context);
     }
 
+    public void loadDataFromServer() {
+        states.add(new State("England From Server", "London", R.drawable.en));
+        states.add(new State("Ukraine From Server", "Kyiv", R.drawable.ua));
+        this.notifyDataSetChanged();
+    }
 
 
     public View getView(int position, View convertView, ViewGroup parent) {

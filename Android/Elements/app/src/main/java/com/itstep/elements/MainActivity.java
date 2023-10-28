@@ -31,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
         buildListViewCustomAdapter();
         buildSpinner();
 
+        (
+          (StateAdapter)
+                ((ListView)
+                        findViewById(R.id.countriesList))
+                 .getAdapter())
+          .loadDataFromServer();
+
     }
 
     void buildListViewCustomAdapter(){
@@ -46,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
         // устанавливаем для списка адаптер
         countriesList.setAdapter(adapter);
+
+        // adapter.loadDataFromServer();
 
     }
 
