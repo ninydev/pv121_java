@@ -1,12 +1,13 @@
 package com.itstep.asyncawait.privat24;
 
-import android.util.Log;
-
 import java.util.List;
 
 public class CurrencyExchangeService {
 
-    public CurrencyExchangeService() {
+    CurrencyExchangeListener listener;
+
+    public CurrencyExchangeService(CurrencyExchangeListener listener) {
+        this.listener = listener;
     }
 
     public void getExchange(){
@@ -15,13 +16,19 @@ public class CurrencyExchangeService {
 
             @Override
             public void run() {
-                CurrencyExchangeAPI api = new CurrencyExchangeAPI();
-                String response = api.getExchange();
-                Log.d("Currency", response);
+                try {
+                    CurrencyExchangeAPI api = new CurrencyExchangeAPI();
+                    String response = api.getExchange();
 
-                CurrencyExchangeDTO dto = new CurrencyExchangeDTO();
+                    CurrencyExchangeDTO dto = new CurrencyExchangeDTO();
+                    List<CurrencyExchangeModel> currencyList = dto.toList(response);
 
-                List<CurrencyModel> currencyList = dto.toList(response);
+                    if (listener != null) {
+                        listener.onExchangeDataReceived(currencyList);
+                    }
+                } catch (Exception e) {
+                    listener.onExchangeDataError(e);
+                }
             }
         }).start();
 

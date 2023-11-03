@@ -1,6 +1,7 @@
 package com.itstep.asyncawait.privat24;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -13,7 +14,7 @@ public class CurrencyExchangeAPI {
     /**
      * Получить строку JSON с банка
      */
-    public String getExchange(){
+    public String getExchange() throws IOException {
         StringBuilder response = new StringBuilder();
 
         try {
@@ -33,7 +34,7 @@ public class CurrencyExchangeAPI {
             return response.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw e;
         }
 
     }

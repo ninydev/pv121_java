@@ -6,14 +6,14 @@ package com.itstep.asyncawait.privat24;
  "buy":"19.20000",
  "sale":"20.00000"
  */
-public class CurrencyModel {
+public class CurrencyExchangeModel {
     private String code;
     private String baseCode;
     private double buy;
     private double sale;
 
     // Конструктор
-    public CurrencyModel(String currencyCode, String baseCode, double buyRate, double sellRate) {
+    public CurrencyExchangeModel(String currencyCode, String baseCode, double buyRate, double sellRate) {
         this.code = currencyCode;
         this.baseCode = baseCode;
         this.buy = buyRate;

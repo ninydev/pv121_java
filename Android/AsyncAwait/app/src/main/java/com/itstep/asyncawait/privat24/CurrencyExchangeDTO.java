@@ -14,8 +14,8 @@ public class CurrencyExchangeDTO {
      * @param jsonString
      * @return
      */
-    public List<CurrencyModel> toList(String jsonString) {
-        List<CurrencyModel> currencyList = new ArrayList<>();
+    public List<CurrencyExchangeModel> toList(String jsonString) {
+        List<CurrencyExchangeModel> currencyList = new ArrayList<>();
 
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = (JsonArray) parser.parse(jsonString);
@@ -27,7 +27,7 @@ public class CurrencyExchangeDTO {
             double buyRate = jsonObject.get("buy").getAsDouble();
             double sellRate = jsonObject.get("sale").getAsDouble();
 
-            CurrencyModel currency = new CurrencyModel(code, baseCode, buyRate, sellRate);
+            CurrencyExchangeModel currency = new CurrencyExchangeModel(code, baseCode, buyRate, sellRate);
             currencyList.add(currency);
         }
         return currencyList;

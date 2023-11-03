@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itstep.asyncawait.privat24.CurrencyExchangeArrayAdapter;
+import com.itstep.asyncawait.privat24.CurrencyExchangeModel;
 import com.itstep.asyncawait.privat24.CurrencyExchangeService;
 import com.itstep.asyncawait.tasks.ProgressTask;
 import com.itstep.asyncawait.viewmodels.MyViewModel;
@@ -23,7 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -42,36 +46,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                CurrencyExchangeService exchangeService = new CurrencyExchangeService();
+                List<CurrencyExchangeModel> currencyList = new ArrayList<>();
+                CurrencyExchangeArrayAdapter adapter = new CurrencyExchangeArrayAdapter(v.getContext(), 0, currencyList);
+                CurrencyExchangeService exchangeService = new CurrencyExchangeService(adapter);
                 exchangeService.getExchange();
 
+
+
                 contentView.setText("Загрузка...");
-                new Thread(new Runnable() {
-                    public void run() {
-                        try{
-                            String content = getContent("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5");
-                            webView.post(new Runnable() {
-                                public void run() {
-                                    webView.loadDataWithBaseURL("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5",content, "text/html", "UTF-8", "https://stackoverflow.com/");
-                                    Toast.makeText(getApplicationContext(), "Данные загружены", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            contentView.post(new Runnable() {
-                                public void run() {
-                                    contentView.setText(content);
-                                }
-                            });
-                        }
-                        catch (IOException ex){
-                            contentView.post(new Runnable() {
-                                public void run() {
-                                    contentView.setText("Ошибка: " + ex.getMessage());
-                                    Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                }).start();
+//                new Thread(new Runnable() {
+//                    public void run() {
+//                        try{
+//                            String content = getContent("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5");
+//                            webView.post(new Runnable() {
+//                                public void run() {
+//                                    webView.loadDataWithBaseURL("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5",content, "text/html", "UTF-8", "https://stackoverflow.com/");
+//                                    Toast.makeText(getApplicationContext(), "Данные загружены", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                            contentView.post(new Runnable() {
+//                                public void run() {
+//                                    contentView.setText(content);
+//                                }
+//                            });
+//                        }
+//                        catch (IOException ex){
+//                            contentView.post(new Runnable() {
+//                                public void run() {
+//                                    contentView.setText("Ошибка: " + ex.getMessage());
+//                                    Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        }
+//                    }
+//                }).start();
             }
         });
 
