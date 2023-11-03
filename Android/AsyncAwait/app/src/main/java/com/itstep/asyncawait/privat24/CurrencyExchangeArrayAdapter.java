@@ -1,5 +1,6 @@
 package com.itstep.asyncawait.privat24;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,12 @@ public class CurrencyExchangeArrayAdapter extends ArrayAdapter<CurrencyExchangeM
     public void onExchangeDataReceived(List<CurrencyExchangeModel> currencyList) {
         this.currencyList = currencyList;
         Log.d("Currency", currencyList.toString());
-        this.notifyDataSetChanged();
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

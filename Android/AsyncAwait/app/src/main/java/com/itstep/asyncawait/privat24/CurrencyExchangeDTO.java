@@ -14,7 +14,7 @@ public class CurrencyExchangeDTO {
      * @param jsonString
      * @return
      */
-    public List<CurrencyExchangeModel> toList(String jsonString) {
+    public List<CurrencyExchangeModel> jsonToList(String jsonString) {
         List<CurrencyExchangeModel> currencyList = new ArrayList<>();
 
         JsonParser parser = new JsonParser();

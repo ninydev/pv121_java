@@ -1,5 +1,6 @@
 package com.itstep.elements.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.itstep.elements.models.State;
 
 public class StateAdapter extends ArrayAdapter<State>
 {
+    Context context;
     private LayoutInflater inflater;
     private int layout;
     private List<State> states;
@@ -27,6 +29,7 @@ public class StateAdapter extends ArrayAdapter<State>
     // но это наружит единообразие адаптеров
     public StateAdapter(Context context, int resource, List<State> states) {
         super(context, resource, states);
+        this.context = context;
         this.states = states;
         this.layout = resource;
         this.inflater = LayoutInflater.from(context);
@@ -44,7 +47,12 @@ public class StateAdapter extends ArrayAdapter<State>
     public void loadDataFromServer() {
         states.add(new State("England From Server", "London", R.drawable.en));
         states.add(new State("Ukraine From Server", "Kyiv", R.drawable.ua));
-        this.notifyDataSetChanged();
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
 

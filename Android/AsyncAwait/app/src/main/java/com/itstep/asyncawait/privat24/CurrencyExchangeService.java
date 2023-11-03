@@ -21,13 +21,14 @@ public class CurrencyExchangeService {
                     String response = api.getExchange();
 
                     CurrencyExchangeDTO dto = new CurrencyExchangeDTO();
-                    List<CurrencyExchangeModel> currencyList = dto.toList(response);
+                    List<CurrencyExchangeModel> currencyList = dto.jsonToList(response);
 
                     if (listener != null) {
                         listener.onExchangeDataReceived(currencyList);
                     }
                 } catch (Exception e) {
-                    listener.onExchangeDataError(e);
+                    if (listener != null)
+                        listener.onExchangeDataError(e);
                 }
             }
         }).start();
