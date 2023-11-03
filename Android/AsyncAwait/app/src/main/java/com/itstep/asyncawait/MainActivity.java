@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,110 +17,95 @@ import android.widget.Toast;
 import com.itstep.asyncawait.tasks.ProgressTask;
 import com.itstep.asyncawait.viewmodels.MyViewModel;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.UUID;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        log("Create");
 
-        TextView textView = findViewById(R.id.textView);
-        Button button = findViewById(R.id.button);
-
-        ProgressBar indicatorBar = findViewById(R.id.indicator);
-        TextView statusView = findViewById(R.id.statusView);
-        Button btnFetch = findViewById(R.id.progressBtn);
-        MyViewModel model = new ViewModelProvider(this).get(MyViewModel.class);
-
-        model.getValue().observe(this, value -> {
-            indicatorBar.setProgress(value);
-            statusView.setText("Статус: " + value);
-            log("Value: " + value);
-        });
-        ProgressTask task = new ProgressTask(
-          this, indicatorBar,statusView, UUID.randomUUID()
-        );
+        TextView contentView = findViewById(R.id.content);
+        WebView webView = findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        Button btnFetch = findViewById(R.id.downloadBtn);
         btnFetch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                log("Start");
-                // model.execute();
-                // task.execute();
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        });
-
-
-
-    }
-
-
-    protected void onCreateOld(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        TextView textView = findViewById(R.id.textView);
-        Button button = findViewById(R.id.button);
-
-        // Создайте Handler, связанный с главным потоком
-        Handler handler = new Handler();
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
-                // Определяем объект Runnable
-                Runnable runnable = new Runnable() {
-                    @Override
+                contentView.setText("Загрузка...");
+                new Thread(new Runnable() {
                     public void run() {
-                        while (true) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            // получаем текущее время
-                            Calendar c = Calendar.getInstance();
-                            int hours = c.get(Calendar.HOUR_OF_DAY);
-                            int minutes = c.get(Calendar.MINUTE);
-                            int seconds = c.get(Calendar.SECOND);
-                            String time = hours + ":" + minutes + ":" + seconds;
-                            // отображаем в текстовом поле
-                            // мы не можем обратиться к элементам в UI Thread потоке напрямую
-                            textView.setText(time);
-
-                            // Вариант с использованием Handler
-//                            handler.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    textView.setText(time);
-//                                }
-//                            });
-
-
-                            // Вариант с использованием runOnUiThread (без Handler)
-                            runOnUiThread(new Runnable() {
-                                @Override
+                        try{
+                            String content = getContent("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5");
+                            webView.post(new Runnable() {
                                 public void run() {
-                                    // Ваш код для обновления UI
-                                    textView.setText(time);
+                                    webView.loadDataWithBaseURL("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5",content, "text/html", "UTF-8", "https://stackoverflow.com/");
+                                    Toast.makeText(getApplicationContext(), "Данные загружены", Toast.LENGTH_SHORT).show();
                                 }
                             });
-
+                            contentView.post(new Runnable() {
+                                public void run() {
+                                    contentView.setText(content);
+                                }
+                            });
+                        }
+                        catch (IOException ex){
+                            contentView.post(new Runnable() {
+                                public void run() {
+                                    contentView.setText("Ошибка: " + ex.getMessage());
+                                    Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
-                };
-                // Определяем объект Thread - новый поток
-                Thread thread = new Thread(runnable);
-                // Запускаем поток
-                thread.start();
+                }).start();
             }
         });
 
+
     }
+
+
+    private String getContent(String path) throws IOException {
+        BufferedReader reader=null;
+        InputStream stream = null;
+        HttpsURLConnection connection = null;
+        try {
+            URL url=new URL(path);
+            connection =(HttpsURLConnection)url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setReadTimeout(10000);
+            connection.connect();
+            stream = connection.getInputStream();
+            reader= new BufferedReader(new InputStreamReader(stream));
+            StringBuilder buf=new StringBuilder();
+            String line;
+            while ((line=reader.readLine()) != null) {
+                buf.append(line).append("\n");
+            }
+            return(buf.toString());
+        }
+        finally {
+            if (reader != null) {
+                reader.close();
+            }
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
 
     public void log(String msg) {
         Log.d("MainActivity", msg);
