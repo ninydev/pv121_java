@@ -10,7 +10,10 @@ public class CurrencyExchangeAPI {
     private static final String PRIVAT_BANK_API_URL = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
 
-    public void getExchange(){
+    /**
+     * Получить строку JSON с банка
+     */
+    public String getExchange(){
         StringBuilder response = new StringBuilder();
 
         try {
@@ -27,12 +30,11 @@ public class CurrencyExchangeAPI {
             }
 
             reader.close();
-
+            return response.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            return null;
         }
 
-        // return response.toString();
     }
 }

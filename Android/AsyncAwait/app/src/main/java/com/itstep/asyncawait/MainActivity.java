@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itstep.asyncawait.privat24.CurrencyExchangeService;
 import com.itstep.asyncawait.tasks.ProgressTask;
 import com.itstep.asyncawait.viewmodels.MyViewModel;
 
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
         btnFetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                CurrencyExchangeService exchangeService = new CurrencyExchangeService();
+                exchangeService.getExchange();
+
                 contentView.setText("Загрузка...");
                 new Thread(new Runnable() {
                     public void run() {
