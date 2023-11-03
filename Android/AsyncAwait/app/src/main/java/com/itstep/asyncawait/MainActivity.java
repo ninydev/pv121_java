@@ -3,6 +3,7 @@ package com.itstep.asyncawait;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,9 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itstep.asyncawait.tasks.ProgressTask;
 import com.itstep.asyncawait.viewmodels.MyViewModel;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,11 +39,16 @@ public class MainActivity extends AppCompatActivity {
             statusView.setText("Статус: " + value);
             log("Value: " + value);
         });
+        ProgressTask task = new ProgressTask(
+          this, indicatorBar,statusView, UUID.randomUUID()
+        );
         btnFetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 log("Start");
-                model.execute();
+                // model.execute();
+                // task.execute();
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
 
