@@ -70,6 +70,12 @@
             document.getElementById("messages").appendChild(p);
 
         });
+
+        // При получении jobId от сервера я подписываюсь на сообщения вот так
+        let jobId = "я получил этот Id с севера"
+        stompClient.subscribe('/topic/' + jobId ,  function (message) {
+
+        })
     });
 
     function sendMessage() {
