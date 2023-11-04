@@ -1,6 +1,6 @@
-package com.itstep.hello_spring.controllers;
+package com.itstep.chat.controllers;
 
-import com.itstep.hello_spring.models.chat.ChatMessage;
+import com.itstep.chat.models.ChatMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
