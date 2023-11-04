@@ -4,6 +4,9 @@ import android.util.Log;
 
 import java.util.List;
 
+/**
+ * Обертка - которая работает с запросами
+ */
 public class MockApiService {
 
     private final MockApiClient mockApiClient;
@@ -14,9 +17,8 @@ public class MockApiService {
 
     public void getAllEntities () {
 
-
         // Вызываем метод для получения данных
-        mockApiClient.getAllEntities(new MockApiClient.ApiCallback<List<EntityModel>>() {
+        mockApiClient.getAllEntities(new ApiCallback<List<EntityModel>>() {
             @Override
             public void onSuccess(List<EntityModel> data) {
                 // Обработка успешного получения данных
