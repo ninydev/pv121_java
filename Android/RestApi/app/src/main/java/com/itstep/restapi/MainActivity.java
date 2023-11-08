@@ -2,6 +2,8 @@ package com.itstep.restapi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,6 +21,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db();
+
+    }
+
+
+    SQLiteDatabase db;
+    protected void db(){
+        db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS users (name TEXT, age INTEGER, UNIQUE(name))");
+        db.execSQL("INSERT OR IGNORE INTO users VALUES ('Tom Smith', 23), ('John Dow', 31);");
+
+        Cursor query = db.rawQuery("SELECT * FROM users;", null);
+
+        while(query.moveToNext()){
+            String name = query.getString(0);
+            int age = query.getInt(1);
+            Log.d("db", "Name: " + name + " Age: " + age + "\n");
+        }
+        query.close();
+        db.close();
+    }
+
+
+
+
+    protected void apis() {
         // Обращение через еще один уровень абстракции (в нем красиво было бы спрятать адаптер)
         MockApiService apiService = new MockApiService();
         apiService.getAllEntities();
@@ -68,6 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", errorMessage);
             }
         });
-
     }
+
 }
